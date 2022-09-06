@@ -1,5 +1,4 @@
-import { NextFunction, Response, Request, CookieOptions } from 'express'
-import config from 'config'
+import { NextFunction, Response, Request } from 'express'
 import log from '../logger'
 import {
   connectSessionToEmployee,
@@ -7,30 +6,12 @@ import {
 } from '../services/employee.service'
 import { Employee } from '../entities/Employee.entity'
 import AppError from '../utils/AppError'
-import { changeNumberSession, sessionCreate } from '../services/session.service'
-
-const cookiesOptions: CookieOptions = {
-  httpOnly: true,
-  sameSite: 'lax',
-}
-
-if (process.env.NODE_ENV === 'production') cookiesOptions.secure = true
-
-const accessTokenCookieOptions: CookieOptions = {
-  ...cookiesOptions,
-  expires: new Date(
-    Date.now() + config.get<number>('accessTokenExpiresIn') * 60 * 1000
-  ),
-  maxAge: config.get<number>('accessTokenExpiresIn') * 60 * 1000,
-}
-
-const refreshTokenCookieOptions: CookieOptions = {
-  ...cookiesOptions,
-  expires: new Date(
-    Date.now() + config.get<number>('refreshTokenExpiresIn') * 60 * 1000
-  ),
-  maxAge: config.get<number>('refreshTokenExpiresIn') * 60 * 1000,
-}
+import {
+  changeNumberSession,
+  createAccessToken,
+  createRefreshToken,
+  sessionCreate,
+} from '../services/session.service'
 
 export const loginHandler = async (
   req: Request,
@@ -59,10 +40,23 @@ export const loginHandler = async (
       numberSession = session.number
     }
 
-    log.info(numberSession.toString())
+    const refreshToken = await createRefreshToken(employee.id, numberSession)
+
+    const accessToken = await createAccessToken(employee.id)
+
+    res.cookie('refreshToken', refreshToken, {
+      expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+      httpOnly: true,
+      secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
+    })
 
     res.status(200).json({
       message: 'success',
+      data: {
+        accessToken,
+        refreshToken,
+        employee: employee.toJSON(),
+      },
     })
   } catch (e) {
     log.error(e)

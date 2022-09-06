@@ -80,6 +80,6 @@ export class Employee extends BaseEntity {
   }
 
   toJSON() {
-    return { ...this, password: undefined }
+    return { ...this, password: undefined, session: undefined }
   }
 }
