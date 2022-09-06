@@ -1,9 +1,13 @@
 import { NextFunction, Response, Request, CookieOptions } from 'express'
 import config from 'config'
 import log from '../logger'
-import { findEmployeeByUsername } from '../services/employee.service'
+import {
+  connectSessionToEmployee,
+  findEmployeeByUsername,
+} from '../services/employee.service'
 import { Employee } from '../entities/Employee.entity'
 import AppError from '../utils/AppError'
+import { changeNumberSession, sessionCreate } from '../services/session.service'
 
 const cookiesOptions: CookieOptions = {
   httpOnly: true,
@@ -44,6 +48,18 @@ export const loginHandler = async (
     ) {
       return next(new AppError(400, 'Invalid email or password'))
     }
+
+    let numberSession = 1
+
+    if (!employee.session) {
+      const session = await sessionCreate()
+      await connectSessionToEmployee(session, employee)
+    } else {
+      const session = await changeNumberSession(employee.session)
+      numberSession = session.number
+    }
+
+    log.info(numberSession.toString())
 
     res.status(200).json({
       message: 'success',

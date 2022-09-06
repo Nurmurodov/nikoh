@@ -7,11 +7,13 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   PrimaryGeneratedColumn,
+  JoinColumn,
 } from 'typeorm'
 import config from 'config'
 import bcrypt from 'bcryptjs'
 
 import { Role } from '../enums/Role'
+import { Session } from './Session.entity'
 
 @Entity('employee')
 export class Employee extends BaseEntity {
@@ -57,6 +59,10 @@ export class Employee extends BaseEntity {
 
   @CreateDateColumn()
   created_at: Date
+
+  @OneToOne(() => Session, (session) => session.employee) // specify inverse side as a second parameter
+  @JoinColumn()
+  session: Session
 
   @UpdateDateColumn()
   updated_at: Date

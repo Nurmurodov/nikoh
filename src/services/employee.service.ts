@@ -1,6 +1,7 @@
 import { CreateEmployeeInput } from '../schema/employee.schema'
 import { Employee } from '../entities/Employee.entity'
 import { AppDataSource } from '../db'
+import { Session } from '../entities/Session.entity'
 
 const employeeRepository = AppDataSource.getRepository(Employee)
 
@@ -25,10 +26,27 @@ export const createEmployee = async (input: CreateEmployeeInput) => {
   }
 }
 
-export const findEmployeeByUsername = async ({
-  user_name,
-}: {
-  user_name: string
-}) => {
-  return await employeeRepository.findOneBy({ user_name })
+export const findEmployeeByUsername = async (user_name: string) => {
+  try {
+    return await employeeRepository
+      .createQueryBuilder('employee')
+      .select()
+      .leftJoinAndSelect('employee.session', 'session')
+      .where('employee.user_name = :user_name', { user_name: user_name })
+      .getOne()
+  } catch (e) {
+    throw new Error(e.message)
+  }
+}
+
+export const connectSessionToEmployee = async (
+  session: Session,
+  employee: Employee
+) => {
+  try {
+    employee.session = session
+    await employee.save()
+  } catch (e) {
+    throw new Error(e.message)
+  }
 }

@@ -3,20 +3,18 @@ import {
   Entity,
   BaseEntity,
   OneToOne,
-  JoinColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm'
 import { Employee } from './Employee.entity'
 
 @Entity('session')
-export class SessionEntity extends BaseEntity {
+export class Session extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number
 
   @Column()
   number: number
 
-  @OneToOne(() => Employee)
-  @JoinColumn()
-  profile: Employee
+  @OneToOne(() => Employee, (employee) => employee.session) // specify inverse side as a second parameter
+  employee: Employee
 }
