@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express'
 import AppError from '../utils/AppError'
 import { verifyJwt } from '../utils/jwt'
 import { getEmployeeById } from '../services/employee.service'
-import { Employee } from '../entities/Employee.entity'
 
 export const checkToken = async (
   req: Request,
