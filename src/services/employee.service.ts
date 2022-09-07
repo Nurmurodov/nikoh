@@ -39,6 +39,12 @@ export const findEmployeeByUsername = async (user_name: string) => {
   }
 }
 
+export const getEmployeeById = async (id: number) => {
+  return employeeRepository.findOneBy({
+    id,
+  })
+}
+
 export const connectSessionToEmployee = async (
   session: Session,
   employee: Employee
@@ -49,4 +55,8 @@ export const connectSessionToEmployee = async (
   } catch (e) {
     throw new Error(e.message)
   }
+}
+
+export const getAllEmployee = async () => {
+  return await employeeRepository.find()
 }

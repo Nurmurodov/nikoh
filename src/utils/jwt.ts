@@ -1,5 +1,6 @@
 import jwt, { SignOptions } from 'jsonwebtoken'
 import config from 'config'
+import log from '../logger'
 
 export const signJwt = (
   payload: Object,
@@ -13,7 +14,7 @@ export const signJwt = (
 
 export const verifyJwt = <T>(
   token: string,
-  keyName: 'accessTokenPublicKey' | 'refreshTokenPublicKey'
+  keyName: 'accessTokenPrivateKey' | 'refreshTokenPrivateKey'
 ): T | null => {
   try {
     return jwt.verify(token, config.get<string>(keyName)) as T
