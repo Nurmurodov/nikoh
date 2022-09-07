@@ -35,12 +35,12 @@ export const createRefreshToken = async (
   session_number: number
 ) => {
   return signJwt({ employee_id, session_number }, 'refreshTokenPrivateKey', {
-    expiresIn: config.get<number>('refreshTokenExpiresIn') * 60 * 1000,
+    expiresIn: config.get<string>('refreshTokenExpiresIn'),
   })
 }
 
 export const createAccessToken = async (employee_id: number) => {
   return signJwt({ employee_id }, 'accessTokenPrivateKey', {
-    expiresIn: config.get<number>('accessTokenExpiresIn') * 60 * 1000,
+    expiresIn: config.get<string>('accessTokenExpiresIn'),
   })
 }

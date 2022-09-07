@@ -40,9 +40,12 @@ export const findEmployeeByUsername = async (user_name: string) => {
 }
 
 export const getEmployeeById = async (id: number) => {
-  return employeeRepository.findOneBy({
-    id,
-  })
+  return await employeeRepository
+    .createQueryBuilder('employee')
+    .select()
+    .leftJoinAndSelect('employee.session', 'session')
+    .where('employee.id = :id', { id: id })
+    .getOne()
 }
 
 export const connectSessionToEmployee = async (

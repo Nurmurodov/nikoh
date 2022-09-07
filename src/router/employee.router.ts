@@ -9,7 +9,8 @@ import { checkToken } from '../middleware/checkToken'
 
 const router = express.Router()
 
-router.post('/', validate(createEmployeeSchema), createEmployeeHandler)
-router.get('/', checkToken, getAllEmployeeHandler)
+router
+  .post('/', validate(createEmployeeSchema), createEmployeeHandler)
+  .get('/', checkToken, getAllEmployeeHandler)
 
 export default router
