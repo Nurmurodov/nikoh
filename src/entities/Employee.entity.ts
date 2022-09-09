@@ -8,12 +8,14 @@ import {
   UpdateDateColumn,
   PrimaryGeneratedColumn,
   JoinColumn,
+  OneToMany,
 } from 'typeorm'
 import config from 'config'
 import bcrypt from 'bcryptjs'
 
 import { Role } from '../enums/Role'
 import { Session } from './Session.entity'
+import { Marriage } from './Marriage.entity'
 
 @Entity('employee')
 export class Employee extends BaseEntity {
@@ -63,6 +65,9 @@ export class Employee extends BaseEntity {
   @OneToOne(() => Session, (session) => session.employee) // specify inverse side as a second parameter
   @JoinColumn()
   session: Session
+
+  @OneToMany(() => Marriage, (marriage) => marriage.employee)
+  marriages: Marriage[]
 
   @UpdateDateColumn()
   updated_at: Date

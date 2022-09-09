@@ -35,7 +35,7 @@ export const checkToken = async (
 
     const employee = await getEmployeeById(decoded.employee_id)
 
-    if (!employee) {
+    if (!employee || !employee.is_active) {
       return next(new AppError(403, 'Employee topilmadi'))
     }
 

@@ -27,7 +27,8 @@ export const loginHandler = async (
 
     if (
       !employee ||
-      !(await Employee.comparePasswords(password, employee.password))
+      !(await Employee.comparePasswords(password, employee.password)) ||
+      !employee.is_active
     ) {
       return next(new AppError(400, 'Parol yoki login xato'))
     }
@@ -88,7 +89,7 @@ export const refreshHandler = async (
 
     const employee = await getEmployeeById(decoded.employee_id)
 
-    if (!employee || !employee.session) {
+    if (!employee || !employee.session || !employee.is_active) {
       return next(new AppError(400, `Xodim topilmadi`))
     }
 
