@@ -1,5 +1,6 @@
 import express from 'express'
 import {
+  changeStatusHandler,
   createEmployeeHandler,
   deleteEmployeeHandler,
   editEmployeeHandler,
@@ -28,5 +29,7 @@ router
   .route('/:id')
   .delete(deleteEmployeeHandler)
   .patch(validate(editEmployeeSchema), editEmployeeHandler)
+
+router.route('/change-status/:id').put(changeStatusHandler)
 
 export default router

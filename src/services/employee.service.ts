@@ -108,3 +108,18 @@ export const editEmployee = async (
     throw new Error(e.message)
   }
 }
+
+export const changeStatusEmployee = async (
+  employee: Employee,
+  is_active: boolean
+) => {
+  try {
+    employee.is_active = is_active
+
+    await employee.save()
+
+    return employee
+  } catch (e) {
+    throw new Error(e.message)
+  }
+}

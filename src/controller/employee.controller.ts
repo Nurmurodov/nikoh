@@ -1,5 +1,6 @@
 import { NextFunction, Response, Request } from 'express'
 import {
+  changeStatusEmployee,
   createEmployee,
   deleteEmployee,
   editEmployee,
@@ -102,5 +103,35 @@ export const getAllEmployeeHandler = async (
   } catch (err) {
     log.error(err)
     next(err)
+  }
+}
+
+export const changeStatusHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params
+    const { is_active } = req.query
+
+    const employee = await getEmployeeById(Number(id))
+
+    if (!employee) {
+      return next(new AppError(400, 'Xodim topilmadi!'))
+    }
+
+    const editedEmployee = await changeStatusEmployee(
+      employee,
+      is_active as any
+    )
+
+    res.status(200).json({
+      status: 'success',
+      employee: editedEmployee,
+    })
+  } catch (e) {
+    log.error(e)
+    next(e)
   }
 }

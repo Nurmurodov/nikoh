@@ -1,4 +1,4 @@
-import { string, object, z, boolean, TypeOf, nullable } from 'zod'
+import { string, object, z, boolean, TypeOf } from 'zod'
 import { Role } from '../enums/Role'
 
 export const createEmployeeSchema = object({
@@ -21,11 +21,11 @@ export const createEmployeeSchema = object({
     user_name: string({
       required_error: 'User name kiritilmagan',
     }).min(8, 'User name qisqa'),
-    date_birth: nullable(
-      string({
-        required_error: "Tug'ilgan kun kiritilmagan!",
-      })
-    ),
+    date_birth: string({
+      required_error: "Tug'ilgan kun kiritilmagan!",
+    })
+      .nullable()
+      .default(null),
     is_active: boolean({
       required_error: "Activelik boolean bo'lishi kerak",
     })
