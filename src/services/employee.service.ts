@@ -73,6 +73,8 @@ export const getAllEmployee = async (
     .select()
     .limit(size)
     .offset(size * (page - 1))
+    .where('employee.full_name ILIKE :search', { search: `%${search}%` })
+    .orWhere('employee.phone ILIKE :search', { search: `%${search}%` })
     .getMany()
 }
 
