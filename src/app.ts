@@ -9,6 +9,7 @@ import { AppDataSource } from './db'
 
 import employeeRouter from './router/employee.router'
 import authRouter from './router/auth.router'
+import personRouter from './router/person.router'
 
 const port = (config.get('port') as number) || 5000
 
@@ -21,6 +22,7 @@ app.use(cookieParser())
 
 app.use('/api/v1/employee', employeeRouter)
 app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/person', personRouter)
 
 app.get('/api/healthChecker', (req: Request, res: Response) => {
   res.status(200).json({
@@ -33,7 +35,7 @@ app.all('*', (req: Request, res: Response, next: NextFunction) => {
   next(new AppError(404, `Route ${req.originalUrl} not found`))
 })
 
-app.use((error: AppError, req: Request, res: Response, next: NextFunction) => {
+app.use((error: AppError, req: Request, res: Response) => {
   error.status = error.status || 'error'
   error.statusCode = error.statusCode || 500
 

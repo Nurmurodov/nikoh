@@ -26,4 +26,24 @@ export const createPersonSchema = object({
   }),
 })
 
+export const editPersonSchema = object({
+  body: object({
+    first_name: string().nullable().default(null),
+    last_name: string().nullable().default(null),
+    father_name: string().nullable().default(null),
+    address: string().nullable().default(null),
+    phone: string().length(13, 'Telefon raqami xato').nullable().default(null),
+    date_birth: string()
+      .length(10, 'Sana xato kiritilgan')
+      .nullable()
+      .default(null),
+    passport: string()
+      .length(9, 'Passport xato kiritilgan')
+      .nullable()
+      .default(null),
+    gender: z.optional(z.nativeEnum(Gender)).nullable().default(null),
+  }),
+})
+
 export type CreatePersonInput = TypeOf<typeof createPersonSchema>['body']
+export type EditPersonInput = TypeOf<typeof editPersonSchema>['body']
