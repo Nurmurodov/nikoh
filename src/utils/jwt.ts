@@ -1,6 +1,5 @@
 import jwt, { SignOptions } from 'jsonwebtoken'
 import config from 'config'
-import log from '../logger'
 
 export const signJwt = (
   payload: Object,

@@ -36,6 +36,8 @@ app.all('*', (req: Request, res: Response, next: NextFunction) => {
 })
 
 app.use((error: AppError, req: Request, res: Response) => {
+  log.info(error)
+
   error.status = error.status || 'error'
   error.statusCode = error.statusCode || 500
 

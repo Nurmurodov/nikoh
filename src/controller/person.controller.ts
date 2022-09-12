@@ -1,15 +1,16 @@
 import { Request, Response, NextFunction } from 'express'
-import log from '../logger'
 import { CreatePersonInput } from '../schema/person.schema'
 import {
   createPerson,
   deletePerson,
   editPerson,
   getAllPerson,
+  getAllPersonForMarriage,
   getCountPerson,
   getPersonById,
 } from '../services/person.service'
 import AppError from '../utils/AppError'
+import { Gender } from '../enums/Gender'
 
 export const createPersonHandler = async (
   req: Request,
@@ -26,7 +27,6 @@ export const createPersonHandler = async (
       person,
     })
   } catch (e) {
-    log.error(e)
     next(e)
   }
 }
@@ -52,7 +52,6 @@ export const editPersonHandler = async (
       employee: editedPerson,
     })
   } catch (e) {
-    log.error(e)
     next(e)
   }
 }
@@ -71,7 +70,6 @@ export const deletePersonHandler = async (
       status: 'success',
     })
   } catch (e) {
-    log.error(e)
     next(e)
   }
 }
@@ -99,8 +97,29 @@ export const getAllPersonHandler = async (
       size: Number(size),
       count,
     })
-  } catch (err) {
-    log.error(err)
-    next(err)
+  } catch (e) {
+    next(e)
+  }
+}
+
+export const getAllPersonForMarriageHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { search = '', type } = req.query
+
+    const persons = await getAllPersonForMarriage(
+      search as string,
+      type as Gender
+    )
+
+    res.status(200).json({
+      status: 'success',
+      person: persons,
+    })
+  } catch (e) {
+    next(e)
   }
 }

@@ -39,6 +39,7 @@ export class Person extends BaseEntity {
 
   @Column({
     length: 9,
+    unique: true,
   })
   passport: string
 
@@ -47,6 +48,11 @@ export class Person extends BaseEntity {
     enum: Gender,
   })
   gender: string
+
+  @Column({
+    default: false,
+  })
+  have_active_marriage: boolean
 
   @ManyToMany(() => Marriage, { cascade: true })
   @JoinTable({

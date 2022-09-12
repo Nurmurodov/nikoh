@@ -1,5 +1,4 @@
 import { NextFunction, Response, Request } from 'express'
-import log from '../logger'
 import {
   connectSessionToEmployee,
   findEmployeeByUsername,
@@ -62,7 +61,6 @@ export const loginHandler = async (
       },
     })
   } catch (e) {
-    log.error(e)
     next(e)
   }
 }
@@ -121,7 +119,6 @@ export const refreshHandler = async (
       },
     })
   } catch (e) {
-    log.error(e)
     next(e)
   }
 }

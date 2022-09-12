@@ -9,7 +9,6 @@ import {
   getEmployeeById,
 } from '../services/employee.service'
 import { CreateEmployeeInput } from '../schema/employee.schema'
-import log from '../logger'
 import AppError from '../utils/AppError'
 
 export const createEmployeeHandler = async (
@@ -26,9 +25,8 @@ export const createEmployeeHandler = async (
       status: 'success',
       employee,
     })
-  } catch (err) {
-    log.error(err)
-    next(err)
+  } catch (e) {
+    next(e)
   }
 }
 
@@ -46,7 +44,6 @@ export const deleteEmployeeHandler = async (
       status: 'success',
     })
   } catch (e) {
-    log.error(e)
     next(e)
   }
 }
@@ -72,7 +69,6 @@ export const editEmployeeHandler = async (
       employee: editedEmployee,
     })
   } catch (e) {
-    log.error(e)
     next(e)
   }
 }
@@ -100,9 +96,8 @@ export const getAllEmployeeHandler = async (
       size: Number(size),
       count,
     })
-  } catch (err) {
-    log.error(err)
-    next(err)
+  } catch (e) {
+    next(e)
   }
 }
 
@@ -131,7 +126,6 @@ export const changeStatusHandler = async (
       employee: editedEmployee,
     })
   } catch (e) {
-    log.error(e)
     next(e)
   }
 }

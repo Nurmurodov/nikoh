@@ -8,6 +8,7 @@ import {
   createPersonHandler,
   deletePersonHandler,
   editPersonHandler,
+  getAllPersonForMarriageHandler,
   getAllPersonHandler,
 } from '../controller/person.controller'
 
@@ -24,5 +25,7 @@ router
   .route('/:id')
   .patch(validate(editPersonSchema), editPersonHandler)
   .delete(deletePersonHandler)
+
+router.route('/all').get(getAllPersonForMarriageHandler)
 
 export default router
