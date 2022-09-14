@@ -5,12 +5,12 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToMany,
   ManyToOne,
   JoinColumn,
 } from 'typeorm'
-import { Person } from './Person.entity'
 import { Employee } from './Employee.entity'
+import { Men } from './Men.entity'
+import { Women } from './Women.entity'
 
 @Entity('marriage')
 export class Marriage extends BaseEntity {
@@ -20,45 +20,62 @@ export class Marriage extends BaseEntity {
   @Column()
   dowry: string
 
-  @Column()
+  @Column({
+    default: false,
+  })
   is_payed_dowry: boolean
 
-  @Column()
+  @Column({
+    default: true,
+  })
   is_active: boolean
 
+  @Column('simple-array', { array: true, nullable: true })
+  witnesses: string[]
+
   @Column()
-  married_number: number
+  cancelled_date: Date
 
-  @ManyToMany(() => Person, { cascade: true })
-  witness: Person[]
+  @Column({
+    nullable: true,
+  })
+  divorce_count: number
 
-  @ManyToOne(() => Person, (person) => person.marriages, {
+  @ManyToOne(() => Employee, (employee) => employee.created_marriages, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({
-    name: 'man_id',
+    name: 'created_employee_id',
   })
-  man: Person
+  created_employee: Employee
 
-  @ManyToOne(() => Employee, (employee) => employee.marriages, {
+  @ManyToOne(() => Employee, (employee) => employee.cancelled_marriages, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({
-    name: 'employee_id',
+    name: 'cancelled_employee_id',
   })
-  employee: Person
-
-  @ManyToOne(() => Person, (person) => person.marriages, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({
-    name: 'women_id',
-  })
-  women: Person
+  cancelled_employee: Employee
 
   @CreateDateColumn()
   created_date: Date
 
   @UpdateDateColumn()
   updated_date: Date
+
+  @ManyToOne(() => Men, (man) => man.marriage, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({
+    name: 'man_id',
+  })
+  man: Men
+
+  @ManyToOne(() => Women, (woman) => woman.marriage, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({
+    name: 'woman_id',
+  })
+  woman: Women
 }

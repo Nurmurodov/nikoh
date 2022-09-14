@@ -66,8 +66,11 @@ export class Employee extends BaseEntity {
   @JoinColumn()
   session: Session
 
-  @OneToMany(() => Marriage, (marriage) => marriage.employee)
-  marriages: Marriage[]
+  @OneToMany(() => Marriage, (marriage) => marriage.created_employee)
+  created_marriages: Marriage[]
+
+  @OneToMany(() => Marriage, (marriage) => marriage.cancelled_employee)
+  cancelled_marriages: Marriage[]
 
   @UpdateDateColumn()
   updated_at: Date
