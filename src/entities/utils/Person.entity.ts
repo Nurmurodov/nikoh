@@ -25,11 +25,19 @@ export class Person extends BaseEntity {
   date_birth: Date
 
   @Column({
+    length: 9,
+    unique: true,
+  })
+  passport: string
+
+  @Column({
     length: 13,
   })
   phone: string
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   address: string
 
   @Column({
