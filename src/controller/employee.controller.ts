@@ -73,6 +73,29 @@ export const editEmployeeHandler = async (
   }
 }
 
+export const getEmployeeHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params
+
+    const employee = await getEmployeeById(Number(id))
+
+    if (!employee) {
+      return next(new AppError(400, 'Xodim topilmadi!'))
+    }
+
+    res.status(200).json({
+      status: 'success',
+      employee,
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
 export const getAllEmployeeHandler = async (
   req: Request,
   res: Response,

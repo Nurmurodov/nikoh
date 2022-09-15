@@ -5,6 +5,7 @@ import {
   deleteEmployeeHandler,
   editEmployeeHandler,
   getAllEmployeeHandler,
+  getEmployeeHandler,
 } from '../controller/employee.controller'
 import { validate } from '../middleware/validate'
 import {
@@ -27,6 +28,7 @@ router
 
 router
   .route('/:id')
+  .get(getEmployeeHandler)
   .delete(deleteEmployeeHandler)
   .patch(validate(editEmployeeSchema), editEmployeeHandler)
 

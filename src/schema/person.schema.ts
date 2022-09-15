@@ -1,4 +1,4 @@
-import { string, object, boolean, TypeOf } from 'zod'
+import { string, object, TypeOf } from 'zod'
 
 export const createPersonSchema = object({
   body: object({
@@ -26,8 +26,18 @@ export const createPersonSchema = object({
 
 export const editPersonSchema = object({
   body: object({
-    full_name: string({
-      required_error: 'F.I.O majburiy',
+    first_name: string({
+      required_error: 'Ism majburiy',
+    })
+      .nullable()
+      .default(null),
+    last_name: string({
+      required_error: 'Familiya majburiy',
+    })
+      .nullable()
+      .default(null),
+    father_name: string({
+      required_error: 'Otasining ismi majburiy',
     })
       .nullable()
       .default(null),
@@ -38,20 +48,16 @@ export const editPersonSchema = object({
       .length(13, 'Telefon raqami xato')
       .nullable()
       .default(null),
-    user_name: string({
-      required_error: 'User name kiritilmagan',
-    })
-      .min(8, 'User name qisqa')
-      .nullable()
-      .default(null),
     date_birth: string({
       required_error: "Tug'ilgan kun kiritilmagan!",
     })
+      .length(10, 'Sana xato kiritilgan')
       .nullable()
       .default(null),
-    is_active: boolean({
-      required_error: "Activelik boolean bo'lishi kerak",
+    passport: string({
+      required_error: 'Passport majburiy',
     })
+      .length(9, 'Passport xato kiritilgan')
       .nullable()
       .default(null),
   }),
