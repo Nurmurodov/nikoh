@@ -3,6 +3,9 @@ import {
   createMan,
   deleteMan,
   findManById,
+  getCountMen,
+  getMen,
+  getMenForMarriage,
   updateMan,
 } from '../services/men.service'
 import { CreatePersonInput, EditPersonInput } from '../schema/person.schema'
@@ -88,6 +91,49 @@ export const getManHandler = async (
     res.status(200).json({
       message: 'Success',
       man,
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
+export const getMenHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { search = '', page = 1, size = 10 } = req.query
+
+    const men = await getMen(Number(page), Number(size), String(search))
+
+    const count = await getCountMen()
+
+    res.status(200).json({
+      status: 'success',
+      men,
+      page: Number(page),
+      size: Number(size),
+      count,
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
+export const getMenForMarriageHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { search = '' } = req.query
+
+    const men = await getMenForMarriage(String(search))
+
+    res.status(200).json({
+      status: 'success',
+      men,
     })
   } catch (e) {
     next(e)

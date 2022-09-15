@@ -45,3 +45,38 @@ export const findManById = async (id: number) => {
 export const deleteMan = async (id: number) => {
   return await menRepository.delete({ id })
 }
+
+export const getMen = async (page: number, size: number, search: string) => {
+  return await menRepository
+    .createQueryBuilder('men')
+    .select()
+    .limit(size)
+    .offset(size * (page - 1))
+    .where('men.first_name ILIKE :search', { search: `%${search}%` })
+    .orWhere('men.last_name ILIKE :search', { search: `%${search}%` })
+    .orWhere('men.father_name ILIKE :search', { search: `%${search}%` })
+    .orWhere('men.phone ILIKE :search', { search: `%${search}%` })
+    .getMany()
+}
+
+export const getMenForMarriage = async (search: string) => {
+  return await menRepository
+    .createQueryBuilder('men')
+    .select([
+      'men.first_name',
+      'men.last_name',
+      'men.father_name',
+      'men.phone',
+      'men.passport',
+      'men.count_marriage',
+    ])
+    .where('men.first_name ILIKE :search', { search: `%${search}%` })
+    .orWhere('men.last_name ILIKE :search', { search: `%${search}%` })
+    .orWhere('men.father_name ILIKE :search', { search: `%${search}%` })
+    .orWhere('men.phone ILIKE :search', { search: `%${search}%` })
+    .getMany()
+}
+
+export const getCountMen = async () => {
+  return await menRepository.createQueryBuilder('men').getCount()
+}

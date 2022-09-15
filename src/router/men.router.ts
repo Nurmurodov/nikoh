@@ -8,6 +8,8 @@ import {
   createManHandler,
   deleteManHandler,
   getManHandler,
+  getMenForMarriageHandler,
+  getMenHandler,
   updateManHandler,
 } from '../controller/men.controller'
 
@@ -16,14 +18,17 @@ const router = express.Router()
 router.use(checkToken)
 router.use(checkAccess([Role.IMOM, Role.NOIB]))
 
-router.route('/').get().post(validate(createPersonSchema), createManHandler)
+router
+  .route('/')
+  .get(getMenHandler)
+  .post(validate(createPersonSchema), createManHandler)
+
+router.route('/marriage').get(getMenForMarriageHandler)
 
 router
   .route('/:id')
   .get(getManHandler)
   .patch(validate(editPersonSchema), updateManHandler)
   .delete(deleteManHandler)
-
-router.route('/marriage').get()
 
 export default router
