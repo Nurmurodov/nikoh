@@ -10,6 +10,7 @@ import { AppDataSource } from './db'
 import employeeRouter from './router/employee.router'
 import authRouter from './router/auth.router'
 import menRouter from './router/men.router'
+import womenRouter from './router/women.router'
 
 const port = (config.get('port') as number) || 5000
 
@@ -23,6 +24,7 @@ app.use(cookieParser())
 app.use('/api/v1/employee', employeeRouter)
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/men', menRouter)
+app.use('/api/v1/women', womenRouter)
 
 app.get('/api/healthChecker', (req: Request, res: Response) => {
   res.status(200).json({
