@@ -110,7 +110,7 @@ export const getAllEmployeeHandler = async (
       String(search)
     )
 
-    const count = await getCountEmployees()
+    const count = await getCountEmployees(String(search))
 
     res.status(200).json({
       status: 'success',

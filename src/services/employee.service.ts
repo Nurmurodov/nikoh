@@ -66,8 +66,12 @@ export const getAllEmployee = async (
     .getMany()
 }
 
-export const getCountEmployees = async () => {
-  return await employeeRepository.createQueryBuilder('employee').getCount()
+export const getCountEmployees = async (search: string) => {
+  return await employeeRepository
+    .createQueryBuilder('employee')
+    .where('employee.full_name ILIKE :search', { search: `%${search}%` })
+    .orWhere('employee.phone ILIKE :search', { search: `%${search}%` })
+    .getCount()
 }
 
 export const deleteEmployee = async (id: number) => {

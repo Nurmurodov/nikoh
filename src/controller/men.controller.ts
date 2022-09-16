@@ -107,7 +107,7 @@ export const getMenHandler = async (
 
     const men = await getMen(Number(page), Number(size), String(search))
 
-    const count = await getCountMen()
+    const count = await getCountMen(String(search))
 
     res.status(200).json({
       status: 'success',

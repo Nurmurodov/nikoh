@@ -77,6 +77,12 @@ export const getMenForMarriage = async (search: string) => {
     .getMany()
 }
 
-export const getCountMen = async () => {
-  return await menRepository.createQueryBuilder('men').getCount()
+export const getCountMen = async (search: string) => {
+  return await menRepository
+    .createQueryBuilder('men')
+    .where('men.first_name ILIKE :search', { search: `%${search}%` })
+    .orWhere('men.last_name ILIKE :search', { search: `%${search}%` })
+    .orWhere('men.father_name ILIKE :search', { search: `%${search}%` })
+    .orWhere('men.phone ILIKE :search', { search: `%${search}%` })
+    .getCount()
 }
