@@ -11,6 +11,7 @@ import employeeRouter from './router/employee.router'
 import authRouter from './router/auth.router'
 import menRouter from './router/men.router'
 import womenRouter from './router/women.router'
+import marriageRouter from './router/marriage.router'
 
 const port = (config.get('port') as number) || 5000
 
@@ -25,6 +26,7 @@ app.use('/api/v1/employee', employeeRouter)
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/men', menRouter)
 app.use('/api/v1/women', womenRouter)
+app.use('/api/v1/marriage', marriageRouter)
 
 app.get('/api/healthChecker', (req: Request, res: Response) => {
   res.status(200).json({

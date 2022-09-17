@@ -30,10 +30,12 @@ export class Marriage extends BaseEntity {
   })
   is_active: boolean
 
-  @Column('simple-array', { array: true, nullable: true })
+  @Column({ type: 'simple-array' })
   witnesses: string[]
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   cancelled_date: Date
 
   @Column({

@@ -1,6 +1,7 @@
 import { AppDataSource } from '../db'
 import { Women } from '../entities/Women.entity'
 import { CreatePersonInput, EditPersonInput } from '../schema/person.schema'
+import { Brackets } from 'typeorm'
 
 const womenRepository = AppDataSource.getRepository(Women)
 
@@ -59,6 +60,16 @@ export const getWomen = async (page: number, size: number, search: string) => {
     .getMany()
 }
 
+export const getWomanMarriageList = async (id: number) => {
+  return await womenRepository
+    .createQueryBuilder('women')
+    .leftJoinAndSelect('women.marriage', 'marriage')
+    .where('women.id = :id', {
+      id: id,
+    })
+    .getOne()
+}
+
 export const getWomenForMarriage = async (search: string) => {
   return await womenRepository
     .createQueryBuilder('women')
@@ -70,10 +81,23 @@ export const getWomenForMarriage = async (search: string) => {
       'women.passport',
       'women.count_divorce',
     ])
-    .where('women.first_name ILIKE :search', { search: `%${search}%` })
-    .orWhere('women.last_name ILIKE :search', { search: `%${search}%` })
-    .orWhere('women.father_name ILIKE :search', { search: `%${search}%` })
-    .orWhere('women.phone ILIKE :search', { search: `%${search}%` })
+    .leftJoinAndSelect('women.marriage', 'marriage')
+    .where(
+      new Brackets((qb) => {
+        qb.where('women.first_name ILIKE :search', {
+          search: `%${search}%`,
+        })
+          .orWhere('women.last_name ILIKE :search', {
+            search: `%${search}%`,
+          })
+          .orWhere('women.father_name ILIKE :search', {
+            search: `%${search}%`,
+          })
+          .orWhere('women.phone ILIKE :search', {
+            search: `%${search}%`,
+          })
+      })
+    )
     .getMany()
 }
 
