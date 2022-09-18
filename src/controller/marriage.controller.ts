@@ -1,9 +1,21 @@
 import { NextFunction, Request, Response } from 'express'
 import { MarriageInput } from '../schema/marriage.schema'
-import { findManById } from '../services/men.service'
+import {
+  cancelMarriageMan,
+  findManById,
+  newMarriageMan,
+} from '../services/men.service'
 import AppError from '../utils/AppError'
-import { getWomanMarriageList } from '../services/women.service'
-import { createMarriage } from '../services/marriage.service'
+import {
+  cancelMarriageWoman,
+  getWomanMarriageList,
+  newMarriageWoman,
+} from '../services/women.service'
+import {
+  cancelMarriage,
+  createMarriage,
+  getMarriageById,
+} from '../services/marriage.service'
 import { Employee } from '../entities/Employee.entity'
 
 export const createMarriageHandler = async (
@@ -14,7 +26,7 @@ export const createMarriageHandler = async (
   try {
     const body: MarriageInput = req.body
 
-    const man = await findManById(body.man_id)
+    let man = await findManById(body.man_id)
 
     if (!man || man?.count_marriage >= 4) {
       return next(
@@ -25,18 +37,21 @@ export const createMarriageHandler = async (
       )
     }
 
-    const woman = await getWomanMarriageList(body.woman_id)
+    let woman = await getWomanMarriageList(body.woman_id)
 
     if (!woman) {
-      return next(new AppError(400, 'Ayol topilmadi'))
+      throw new Error('Ayol topilmadi')
     }
 
     woman.marriage.forEach((marriage) => {
-      if (marriage.is_active) return next(new AppError(400, 'Ayol nikohlangan'))
+      if (marriage.is_active) throw new Error('Ayol nikohlangan')
     })
 
     if (woman.count_divorce === 3 && woman.last_married_man_id === body.man_id)
-      return next(new AppError(400, 'Ayol bu erkakga nikohlana olmaydi'))
+      throw new Error('Ayol bu erkakga nikohlana olmaydi')
+
+    man = await newMarriageMan(man)
+    woman = await newMarriageWoman(woman, man.id)
 
     const marriage = await createMarriage(
       body,
@@ -44,6 +59,66 @@ export const createMarriageHandler = async (
       man,
       woman
     )
+
+    res.status(200).json({
+      message: 'Success',
+      marriage,
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
+export const cancelMarriageHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params
+    const { divorce_count = 1 } = req.query
+
+    let marriage = await getMarriageById(Number(id))
+
+    if (!marriage?.is_active) {
+      throw new Error('Nikoh active emas')
+    }
+
+    await cancelMarriageMan(marriage.man)
+    await cancelMarriageWoman(
+      marriage.woman,
+      marriage.man.id,
+      Number(divorce_count)
+    )
+
+    marriage = await cancelMarriage(
+      marriage,
+      res.locals.employee as Employee,
+      Number(divorce_count)
+    )
+
+    res.status(200).json({
+      message: 'Success',
+      marriage,
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
+export const getOneMarriageHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params
+
+    const marriage = await getMarriageById(Number(id))
+
+    if (!marriage) {
+      throw new Error('Nikoh topilmadi!')
+    }
 
     res.status(200).json({
       message: 'Success',

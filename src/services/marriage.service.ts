@@ -26,3 +26,28 @@ export const createMarriage = async (
 
   return marriage
 }
+
+export const cancelMarriage = async (
+  marriage: Marriage,
+  cancelled_employee: Employee,
+  divorce_count: number
+) => {
+  marriage.is_active = false
+  marriage.cancelled_employee = cancelled_employee
+  marriage.cancelled_date = new Date()
+  marriage.divorce_count = divorce_count
+
+  await marriage.save()
+
+  return marriage
+}
+
+export const getMarriageById = async (id: number) => {
+  return await marriageRepository
+    .createQueryBuilder('marriage')
+    .where('marriage.id = :id', { id: id })
+    .select()
+    .innerJoinAndSelect('marriage.man', 'man')
+    .innerJoinAndSelect('marriage.woman', 'woman')
+    .getOne()
+}

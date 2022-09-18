@@ -37,6 +37,30 @@ export const updateWoman = async (woman: Women, input: EditPersonInput) => {
   return woman
 }
 
+export const newMarriageWoman = async (woman: Women, man_id: number) => {
+  if (woman.last_married_man_id !== man_id) {
+    woman.count_divorce = 0
+    await woman.save()
+  }
+
+  return woman
+}
+
+export const cancelMarriageWoman = async (
+  woman: Women,
+  man_id: number,
+  count_divorce: number
+) => {
+  woman.last_married_man_id = man_id
+  woman.count_divorce = woman.count_divorce
+    ? woman.count_divorce + count_divorce
+    : count_divorce
+
+  await woman.save()
+
+  return woman
+}
+
 export const findWomanById = async (id: number) => {
   return await womenRepository.findOneBy({
     id,

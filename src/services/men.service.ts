@@ -46,6 +46,18 @@ export const deleteMan = async (id: number) => {
   return await menRepository.delete({ id })
 }
 
+export const newMarriageMan = async (man: Men) => {
+  man.count_marriage = man.count_marriage ? man.count_marriage + 1 : 1
+  await man.save()
+  return man
+}
+
+export const cancelMarriageMan = async (man: Men) => {
+  man.count_marriage = man.count_marriage - 1
+  await man.save()
+  return man
+}
+
 export const getMen = async (page: number, size: number, search: string) => {
   return await menRepository
     .createQueryBuilder('men')
