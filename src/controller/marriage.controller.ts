@@ -15,6 +15,8 @@ import {
   cancelMarriage,
   createMarriage,
   getMarriageById,
+  getMarriagesList,
+  getMarriagesListCount,
 } from '../services/marriage.service'
 import { Employee } from '../entities/Employee.entity'
 
@@ -123,6 +125,34 @@ export const getOneMarriageHandler = async (
     res.status(200).json({
       message: 'Success',
       marriage,
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
+export const getMarriagesListHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { is_active, page = 1, size = 10 } = req.query
+
+    const marriages = await getMarriagesList(
+      Number(page),
+      Number(size),
+      String(is_active)
+    )
+
+    const count = await getMarriagesListCount(String(is_active))
+
+    res.status(200).json({
+      message: 'Success',
+      marriages,
+      page: Number(page),
+      size: Number(size),
+      count,
     })
   } catch (e) {
     next(e)
