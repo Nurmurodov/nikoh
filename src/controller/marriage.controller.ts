@@ -42,15 +42,15 @@ export const createMarriageHandler = async (
     let woman = await getWomanMarriageList(body.woman_id)
 
     if (!woman) {
-      throw new Error('Ayol topilmadi')
+      return next(new AppError(400, 'Ayol topilmadi'))
     }
 
     woman.marriage.forEach((marriage) => {
-      if (marriage.is_active) throw new Error('Ayol nikohlangan')
+      if (marriage.is_active) return next(new AppError(400, 'Ayol nikohlangan'))
     })
 
     if (woman.count_divorce === 3 && woman.last_married_man_id === body.man_id)
-      throw new Error('Ayol bu erkakga nikohlana olmaydi')
+      next(new AppError(400, 'Ayol bu erkakga nikohlana olmaydi'))
 
     man = await newMarriageMan(man)
     woman = await newMarriageWoman(woman, man.id)
@@ -82,8 +82,12 @@ export const cancelMarriageHandler = async (
 
     let marriage = await getMarriageById(Number(id))
 
+    if (!marriage) {
+      return next(new AppError(400, 'Nikoh topilmadi'))
+    }
+
     if (!marriage?.is_active) {
-      throw new Error('Nikoh active emas')
+      return next(new AppError(400, 'Nikoh active emas'))
     }
 
     await cancelMarriageMan(marriage.man)
@@ -119,7 +123,7 @@ export const getOneMarriageHandler = async (
     const marriage = await getMarriageById(Number(id))
 
     if (!marriage) {
-      throw new Error('Nikoh topilmadi!')
+      return next(new AppError(400, 'Nikoh topilmadi!'))
     }
 
     res.status(200).json({

@@ -10,6 +10,7 @@ import {
   getWomenForMarriage,
   updateWoman,
 } from '../services/women.service'
+import { getMarriagesByWomanId } from '../services/marriage.service'
 
 export const createWomanHandler = async (
   req: Request,
@@ -134,6 +135,25 @@ export const getWomenForMarriageHandler = async (
     res.status(200).json({
       status: 'success',
       women,
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
+export const getMarriageOneWoman = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params
+
+    const marriagesList = await getMarriagesByWomanId(Number(id))
+
+    res.status(200).json({
+      status: 'success',
+      marriagesList,
     })
   } catch (e) {
     next(e)

@@ -39,7 +39,7 @@ app.all('*', (req: Request, res: Response, next: NextFunction) => {
   next(new AppError(404, `Route ${req.originalUrl} not found`))
 })
 
-app.use((error: AppError, req: Request, res: Response) => {
+app.use((error: AppError, req: Request, res: Response, next: NextFunction) => {
   log.info(error)
 
   error.status = error.status || 'error'

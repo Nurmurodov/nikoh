@@ -8,6 +8,7 @@ import {
   createManHandler,
   deleteManHandler,
   getManHandler,
+  getMarriageOneMan,
   getMenForMarriageHandler,
   getMenHandler,
   updateManHandler,
@@ -30,5 +31,7 @@ router
   .get(getManHandler)
   .patch(validate(editPersonSchema), updateManHandler)
   .delete(deleteManHandler)
+
+router.route('/marriage/:id').get(getMarriageOneMan)
 
 export default router

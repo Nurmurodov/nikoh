@@ -11,6 +11,7 @@ import {
   deleteWomanHandler,
   updateWomanHandler,
   getWomanHandler,
+  getMarriageOneWoman,
 } from '../controller/women.controller'
 
 const router = express.Router()
@@ -30,5 +31,7 @@ router
   .get(getWomanHandler)
   .patch(validate(editPersonSchema), updateWomanHandler)
   .delete(deleteWomanHandler)
+
+router.route('/marriage/:id').get(getMarriageOneWoman)
 
 export default router

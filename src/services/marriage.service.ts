@@ -13,7 +13,7 @@ const marriageQuery = (page: number, size: number, is_active?: string) => {
     .select()
     .limit(size)
     .offset(size * (page - 1))
-    .orderBy('marriage.created_date', 'ASC')
+    .orderBy('marriage.created_date', 'DESC')
     .innerJoinAndSelect('marriage.man', 'man')
     .innerJoinAndSelect('marriage.woman', 'woman')
     .innerJoinAndSelect('marriage.created_employee', 'created_employee')
@@ -81,6 +81,32 @@ export const getMarriagesList = async (
   const query = marriageQuery(page, size, is_active)
 
   return await query.getMany()
+}
+
+export const getMarriagesByManId = async (id: number) => {
+  return await marriageRepository
+    .createQueryBuilder('marriage')
+    .select()
+    .where('marriage.man_id =:id', { id })
+    .orderBy('marriage.created_date', 'DESC')
+    .innerJoinAndSelect('marriage.man', 'man')
+    .innerJoinAndSelect('marriage.woman', 'woman')
+    .innerJoinAndSelect('marriage.created_employee', 'created_employee')
+    .leftJoinAndSelect('marriage.cancelled_employee', 'cancelled_employee')
+    .getMany()
+}
+
+export const getMarriagesByWomanId = async (id: number) => {
+  return await marriageRepository
+    .createQueryBuilder('marriage')
+    .select()
+    .where('marriage.woman_id =:id', { id })
+    .orderBy('marriage.created_date', 'DESC')
+    .innerJoinAndSelect('marriage.man', 'man')
+    .innerJoinAndSelect('marriage.woman', 'woman')
+    .innerJoinAndSelect('marriage.created_employee', 'created_employee')
+    .leftJoinAndSelect('marriage.cancelled_employee', 'cancelled_employee')
+    .getMany()
 }
 
 export const getMarriagesListCount = async (is_active?: string) => {

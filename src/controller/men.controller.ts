@@ -10,6 +10,7 @@ import {
 } from '../services/men.service'
 import { CreatePersonInput, EditPersonInput } from '../schema/person.schema'
 import AppError from '../utils/AppError'
+import { getMarriagesByManId } from '../services/marriage.service'
 
 export const createManHandler = async (
   req: Request,
@@ -134,6 +135,25 @@ export const getMenForMarriageHandler = async (
     res.status(200).json({
       status: 'success',
       men,
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
+export const getMarriageOneMan = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params
+
+    const marriagesList = await getMarriagesByManId(Number(id))
+
+    res.status(200).json({
+      status: 'success',
+      marriagesList,
     })
   } catch (e) {
     next(e)
